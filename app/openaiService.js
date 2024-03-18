@@ -18,9 +18,19 @@ async function fetchOpenAIResponse(message) {
         });
         return response.data.choices[0].text.trim();
     } catch (error) {
+        // Логируем более подробно
         console.error("Error fetching response from OpenAI:", error);
-        return "Извините, произошла ошибка при обработке вашего запроса.";
+
+        // Логируем HTTP-статус и текст ошибки, если это ошибка HTTP
+        if (error.response) {
+            console.error(`HTTP Error: ${error.response.status}`);
+            console.error(`Error Body: ${error.response.data}`);
+        }
+
+        // Возвращаем пользователю более информативное сообщение
+        return "Извините, произошла ошибка при обработке вашего запроса. Пожалуйста, попробуйте позже.";
     }
 }
+
 
 module.exports = { fetchOpenAIResponse };
