@@ -1,8 +1,8 @@
 require('dotenv').config({ path: 'environment/.env' });
-console.log(process.env.OPENAI_API_KEY); // Должно выводить ваш ключ
 
 const OpenAI = require('openai-api');
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Используйте переменные окружения для безопасности
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+console.log(process.env.OPENAI_API_KEY); // Должно выводить ваш ключ
 const openai = new OpenAI(OPENAI_API_KEY);
 
 async function fetchOpenAIResponse(message) {
