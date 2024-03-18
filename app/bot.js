@@ -1,9 +1,11 @@
 const http = require('http');
+const https = require('https');
 const { StringDecoder } = require('string_decoder');
-
+const { fetchOpenAIResponse } = require('./openaiService');
 const decoder = new StringDecoder('utf-8');
-const TELEGRAM_BOT_TOKEN = '7087251078:AAHE2Y-TRQm1NEqqKT3FBz6AWAdKlGb-xEE'; // Замените на токен вашего бота
-const https = require('https'); // Используйте модуль HTTPS
+
+const TELEGRAM_BOT_TOKEN = '7087251078:AAHE2Y-TRQm1NEqqKT3FBz6AWAdKlGb-xEE';
+
 const server = http.createServer((req, res) => {
     if (req.method === 'POST') {
         let buffer = '';
@@ -19,10 +21,18 @@ const server = http.createServer((req, res) => {
             if (parsedMessage.message && parsedMessage.message.text) {
                 // Логика обработки текстового сообщения
                 console.log(`Received message: ${parsedMessage.message.text}`);
-                sendTextMessage(parsedMessage.message.chat.id, 'Привет, это ответ от вашего бота!');
+                // Получаем ответ от OpenAI
+                fetchOpenAIResponse(parsedMessage.message.text)
+                    .then(replyText => {
+                        // Отправляем ответ пользователю
+                        sendTextMessage(parsedMessage.message.chat.id, replyText);
+                    })
+                    .catch(error => {
+                        console.error("Error fetching response from OpenAI:", error);
+                        sendTextMessage(parsedMessage.message.chat.id, "Извините, произошла ошибка при обработке вашего запроса.");
+                    });
             }
-            // Эта строка, вероятно, должна быть внутри условия выше, иначе она будет выполняться всегда
-            // sendTextMessage('317919742', 'Привет, это ответ от вашего бота!');
+
             res.statusCode = 200;
             res.setHeader('Content-Type', 'text/plain');
             res.end('OK\n');
