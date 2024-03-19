@@ -40,7 +40,7 @@ async function fetchOpenAIResponse(message) {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify({
             prompt: message,
-            model: "gpt-3.5-turbo-instruct", // Актуализированная модель
+            model: "gpt-3.5-turbo-instruct",
             temperature: 0.7,
             max_tokens: 150,
             top_p: 1.0,
