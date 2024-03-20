@@ -1,41 +1,35 @@
-# Логи
+# compiled output
+/dist
+/node_modules
+
+# Logs
 logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# Зависимости
-node_modules/
-
-# Среды разработки и редакторы
-/.pnp
-.pnp.js
-# файлы и каталоги операционной системы
+# OS
 .DS_Store
-Thumbs.db
 
-# Файлы конфигурации IDE
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
 /.idea
-/.vscode
-*.swp
-*.swo
+.project
+.classpath
+.c9/
+*.launch
+.settings/
 *.sublime-workspace
 
-# Директории сборки и дистрибутивы
-/dist
-/tmp
-/out
-
-# Архивы, полученные при сжатии выходных данных сборки
-*.tar.gz
-*.zip
-*.rar
-
-# Секретные файлы, содержащие ключи доступа, пароли и т.д.
-#app/environment/.env
-.secret
-
-# Файлы сборки - Если вы используете какие-либо системы сборки
-/coverage
-/build
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
