@@ -7,6 +7,7 @@ export class TelegramBotController {
 
     @Post()
     async handleMessage(@Body() body: any) {
+        console.log('тело запроса', body)
         await this.telegramService.processUpdate(body);
     }
 }
