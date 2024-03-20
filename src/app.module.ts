@@ -1,10 +1,11 @@
 import * as Joi from 'joi';
-import { Module } from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TelegramBotModule } from "./telegram-bot/telegram-bot.module";
 import { OpenaiModule } from "./openai/openai.module";
 import { AppController } from './app.controller'; // Убедитесь, что путь верный
-import { AppService } from './app.service'; // Убедитесь, что путь верный
+import { AppService } from './app.service';
+import {LoggingMiddleware} from "./common/logging/logging.middleware"; // Убедитесь, что путь верный
 
 @Module({
   imports: [
@@ -22,4 +23,10 @@ import { AppService } from './app.service'; // Убедитесь, что пут
   controllers: [AppController], // TelegramBotController теперь в TelegramBotModule
   providers: [AppService], // OpenaiService теперь в OpenaiModule
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+        .apply(LoggingMiddleware)
+        .forRoutes('*'); // Применяется ко всем маршрутам
+  }
+}
