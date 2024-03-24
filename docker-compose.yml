@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  app:
+    container_name: nest-gpt
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: app
+      MYSQL_PASSWORD: 123456
+      MYSQL_DB: appdb
+  db:
+    container_name: mysqldb
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
