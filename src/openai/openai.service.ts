@@ -10,7 +10,7 @@ export class OpenaiService {
         const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
         const data = {
             prompt: message,
-            model: "gpt-3.5-turbo-instruct",
+            model: "gpt-3.5-turbo-0125",
             temperature: 0.7,
             max_tokens: 150,
             top_p: 1.0,

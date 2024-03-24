@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { OpenaiService } from '../openai/openai.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
+import { Update, Message } from 'typegram';
+
 
 @Injectable()
 export class TelegramBotService {
@@ -11,13 +13,13 @@ export class TelegramBotService {
         private readonly configService: ConfigService
     ) {}
 
-    async processUpdate(update: any) {
-        if (update.message && update.message.text) {
-            const replyText = await this.openaiService.fetchOpenAIResponse(update.message.text);
-            await this.sendTextMessage(update.message.chat.id, replyText);
+    async processUpdate(update: Update) {
+        if ('message' in update && update.message.text) {
+            const message: Message.TextMessage = update.message as Message.TextMessage;
+            const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
+            await this.sendTextMessage(message.chat.id, replyText);
         }
     }
-
     private async sendTextMessage(chatId: number, text: string) {
         const TELEGRAM_BOT_TOKEN = this.configService.get<string>('TELEGRAM_BOT_TOKEN');
         const postData = { chat_id: chatId, text: text };
