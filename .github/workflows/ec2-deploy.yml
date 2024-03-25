@@ -12,7 +12,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Deploy to EC2
+    - name: Deploy to EC2 and Restart Docker Container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -21,5 +21,11 @@ jobs:
         script: |
           cd telegram-bot-nodejs
           git pull origin main
-          sudo docker exec nest-gpt npm install
-          sudo docker exec nest-gpt pm2 reload all
+          # Остановка и удаление существующего контейнера, если он существует
+          sudo docker stop nest-gpt || true
+          sudo docker rm nest-gpt || true
+          # Пересборка образа
+          sudo docker build -t nest-gpt .
+          # Запуск контейнера с новым образом
+          sudo docker run -d --name nest-gpt -p 3000:3000 nest-gpt
+
