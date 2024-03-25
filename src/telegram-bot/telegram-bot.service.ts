@@ -18,7 +18,7 @@ export class TelegramBotService {
             // Проверка на команду /start
             if (update.message.text.startsWith('/start')) {
                 // Текст приветственного сообщения
-                const welcomeMessage = 'Вас вітає технічна підтримка Таскомбанку, чим можемо допомогти?';
+                const welcomeMessage = 'Вас вітає технічна підтримка ТАСкомбанку, чим можемо допомогти?';
                 await this.sendTextMessage(update.message.chat.id, welcomeMessage);
             } else {
                 // Обработка остальных текстовых сообщений
