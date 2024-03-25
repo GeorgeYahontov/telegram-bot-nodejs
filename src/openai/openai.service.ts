@@ -19,7 +19,7 @@ export class OpenaiService {
         };
 
         try {
-            const response = await this.httpService.post('https://api.openai.com/v1/completions', data, {
+            const response = await this.httpService.post('https://api.openai.com/v1/chat/completions', data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${openaiApiKey}`,
