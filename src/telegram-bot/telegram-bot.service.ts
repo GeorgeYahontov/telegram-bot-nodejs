@@ -20,9 +20,11 @@ export class TelegramBotService {
                 // Текст приветственного сообщения
                 const welcomeMessage = 'Вас вітає технічна підтримка ТАСкомбанку, чим можемо допомогти?';
                 await this.sendTextMessage(update.message.chat.id, welcomeMessage);
-            } else if(update.message && update.message.text) {
-                const replyText = await this.openaiService.fetchOpenAIResponse(update.message.text);
-                await this.sendTextMessage(update.message.chat.id, replyText);
+            } else {
+                // Обработка остальных текстовых сообщений
+                const message = update.message;
+                const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
+                await this.sendTextMessage(message.chat.id, replyText);
             }
         }
     }
