@@ -15,9 +15,17 @@ export class TelegramBotService {
 
     async processUpdate(update: Update) {
         if ('message' in update && update.message.text) {
-            const message: Message.TextMessage = update.message as Message.TextMessage;
-            const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
-            await this.sendTextMessage(message.chat.id, replyText);
+            // Проверка на команду /start
+            if (update.message.text.startsWith('/start')) {
+                // Текст приветственного сообщения
+                const welcomeMessage = 'Вас вітає технічна підтримка Таскомбанку, чим можемо допомогти?';
+                await this.sendTextMessage(update.message.chat.id, welcomeMessage);
+            } else {
+                // Обработка остальных текстовых сообщений
+                const message: Message.TextMessage = update.message as Message.TextMessage;
+                const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
+                await this.sendTextMessage(message.chat.id, replyText);
+            }
         }
     }
     private async sendTextMessage(chatId: number, text: string) {
