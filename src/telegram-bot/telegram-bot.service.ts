@@ -13,18 +13,16 @@ export class TelegramBotService {
         private readonly configService: ConfigService
     ) {}
 
-    async processUpdate(update: Update) {
+    async processUpdate(update: any) {
         if ('message' in update && update.message.text) {
             // Проверка на команду /start
             if (update.message.text.startsWith('/start')) {
                 // Текст приветственного сообщения
                 const welcomeMessage = 'Вас вітає технічна підтримка ТАСкомбанку, чим можемо допомогти?';
                 await this.sendTextMessage(update.message.chat.id, welcomeMessage);
-            } else {
-                // Обработка остальных текстовых сообщений
-                const message: Message.TextMessage = update.message as Message.TextMessage;
-                const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
-                await this.sendTextMessage(message.chat.id, replyText);
+            } else if(update.message && update.message.text) {
+                const replyText = await this.openaiService.fetchOpenAIResponse(update.message.text);
+                await this.sendTextMessage(update.message.chat.id, replyText);
             }
         }
     }
