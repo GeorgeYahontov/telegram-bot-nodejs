@@ -1,6 +1,7 @@
 name: Deploy to EC2
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -18,8 +19,20 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+   #     script: |
+   #       cd telegram-bot-nodejs
+  #        git pull origin main
+  #        sudo docker exec nest-gpt npm install
+   #       sudo docker exec nest-gpt pm2 reload all
+   
         script: |
+          docker pause  nginx-proxy-m-app-1
+          docker pause  portainer
+
           cd telegram-bot-nodejs
           git pull origin main
-          sudo docker exec nest-gpt npm install
-          sudo docker exec nest-gpt pm2 reload all
+          docker-compose down
+          docker-compose up --build -d
+
+          docker unpause  nginx-proxy-m-app-1
+          docker unpause  portainer
