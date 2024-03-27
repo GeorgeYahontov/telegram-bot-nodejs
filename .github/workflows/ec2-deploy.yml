@@ -26,13 +26,13 @@ jobs:
    #       sudo docker exec nest-gpt pm2 reload all
    
         script: |
-          docker pause  nginx-proxy-m-app-1
-          docker pause  portainer
+          sudo docker pause  nginx-proxy-m-app-1
+          sudo docker pause  portainer
 
           cd telegram-bot-nodejs
           git pull origin main
-          docker-compose down
-          docker-compose up --build -d
+          sudo docker-compose down
+          sudo docker-compose up --build -d
 
-          docker unpause  nginx-proxy-m-app-1
-          docker unpause  portainer
+          sudo docker unpause  nginx-proxy-m-app-1
+          sudo docker unpause  portainer
