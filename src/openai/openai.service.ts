@@ -10,7 +10,7 @@ export class OpenaiService {
         const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
         const data = {
             prompt: message,
-            model: "gpt-3.5-turbo-0125",
+            model: "gpt-3.5-turbo-instruct",
             temperature: 0.7,
             max_tokens: 150,
             top_p: 1.0,
@@ -19,7 +19,7 @@ export class OpenaiService {
         };
 
         try {
-            const response = await this.httpService.post('https://api.openai.com/v1/chat/completions', data, {
+            const response = await this.httpService.post('https://api.openai.com/v1/completions', data, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${openaiApiKey}`,
