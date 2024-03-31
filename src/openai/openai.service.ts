@@ -60,7 +60,10 @@ export class OpenaiService {
         if (!this.dialogues[dialogId]) {
             this.dialogues[dialogId] = [];
             const knowLage = baseKnowledge;
-            this.dialogues[dialogId].push({ role:DialogRole.User, content: knowLage });
+            const prompt = 'Ти чат бот служби банківської підтримки, твоя задача відповідати згідно з базою знань "ВІДПОВІДІ НА ЧАСТІ ЗАПИТАННЯ" , ' +
+                'якщо відповідь невідома згідно з контексту бази знань ти пропонуєшь звернутися за відповідним номером телефону,' +
+                ' ти не маєш відповідати на питання які не стосуються банківських послуг ТАСКОМБАНКА '
+            this.dialogues[dialogId].push({ role:DialogRole.Assistant, content: `${prompt}+${knowLage}` });
             console.log('knowLage work',this.dialogues[dialogId])
 
         }
