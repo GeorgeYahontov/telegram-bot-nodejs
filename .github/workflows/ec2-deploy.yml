@@ -49,8 +49,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            echo "${{ secrets.CICD_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ needs.build-and-push.outputs.repo_owner_lower }}/telegram-bot-nodejs:latest
-            docker stop nodeapp || true
-            docker rm nodeapp || true
-            docker run --name nodeapp -d -p 3000:3000 ghcr.io/${{ needs.build-and-push.outputs.repo_owner_lower }}/telegram-bot-nodejs:latest
+            echo "${{ secrets.CICD_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            sudo docker pull ghcr.io/${{ needs.build-and-push.outputs.repo_owner_lower }}/telegram-bot-nodejs:latest
+            sudo docker stop nodeapp || true
+            sudo docker rm nodeapp || true
+            sudo docker run --name nodeapp -d -p 3000:3000 ghcr.io/${{ needs.build-and-push.outputs.repo_owner_lower }}/telegram-bot-nodejs:latest
