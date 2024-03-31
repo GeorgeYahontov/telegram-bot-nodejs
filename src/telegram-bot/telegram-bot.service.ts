@@ -24,7 +24,7 @@ export class TelegramBotService {
             } else {
                 // Обработка остальных текстовых сообщений
                 const dialogId = update.message.chat.id;
-                const message = update.message;
+                const message = update.message.text;
                 let dialog = await this.openaiService.updateDialogue(dialogId,message,DialogRole.User);
                 const gptResponse = await this.openaiService.generateText(dialog);
                 await this.openaiService.updateDialogue(dialogId,gptResponse.replyText,DialogRole.Assistant)
