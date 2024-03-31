@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { OpenaiService } from '../openai/openai.service';
+import {DialogRole, OpenaiService} from '../openai/openai.service';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { Update, Message } from 'typegram';
 
 
 @Injectable()
 export class TelegramBotService {
+
+
     constructor(
         private readonly openaiService: OpenaiService,
         private readonly httpService: HttpService,
@@ -22,9 +23,12 @@ export class TelegramBotService {
                 await this.sendTextMessage(update.message.chat.id, welcomeMessage);
             } else {
                 // Обработка остальных текстовых сообщений
+                const dialogId = update.message.chat.id;
                 const message = update.message;
-                const replyText = await this.openaiService.fetchOpenAIResponse(message.text);
-                await this.sendTextMessage(message.chat.id, replyText);
+                let dialog = await this.openaiService.updateDialogue(dialogId,message,DialogRole.User);
+                const gptResponse = await this.openaiService.generateText(dialog);
+                await this.openaiService.updateDialogue(dialogId,gptResponse.replyText,DialogRole.Assistant)
+                await this.sendTextMessage(message.chat.id, gptResponse.replyText);
             }
         }
     }
