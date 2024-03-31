@@ -51,6 +51,7 @@ jobs:
           script: |
             echo "${{ secrets.CICD_TOKEN }}" | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
             cd ~/telegram-bot-nodejs
+            sudo git pull
             sudo docker ps -a | grep nodeapp && docker rm -f nodeapp || true # Удаляем контейнер /nodeapp, если он существует
             sudo docker-compose pull app
             sudo docker-compose down
