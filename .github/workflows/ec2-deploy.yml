@@ -15,7 +15,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
+        -
+      - name: Convert repository owner to lowercase
+        id: repo_owner
+        run: echo "REPO_OWNER_LOWER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -29,7 +32,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/telegram-bot-nodejs:latest
+          tags: ghcr.io/${{ env.REPO_OWNER_LOWER }}/telegram-bot-nodejs:latest
 
   deploy-to-ec2:
     needs: build-and-push
@@ -43,7 +46,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             echo "${{ secrets.CICD_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ github.repository_owner }}/telegram-bot-nodejs:latest
-            docker stop nodeapp  true
-            docker rm nodeapp  true
-            docker run --name nodeapp -d -p 3000:3000 ghcr.io/georgeyahontov/telegram-bot-nodejs:latest
+            docker pull ghcr.io/${{ env.REPO_OWNER_LOWER }}/telegram-bot-nodejs:latest
+            docker stop nodeapp || true
+            docker rm nodeapp || true
+            docker run --name nodeapp -d -p 3000:3000 ghcr.io/${{ env.REPO_OWNER_LOWER }}/telegram-bot-nodejs:latest
