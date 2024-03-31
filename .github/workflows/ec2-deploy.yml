@@ -46,4 +46,4 @@ jobs:
             docker pull ghcr.io/${{ github.repository_owner }}/telegram-bot-nodejs:latest
             docker stop nodeapp  true
             docker rm nodeapp  true
-            docker run --name nodeapp -d -p 3000:3000 ghcr.io/GeorgeYahontov/telegram-bot-nodejs:latest
+            docker run --name nodeapp -d -p 3000:3000 ghcr.io/georgeyahontov/telegram-bot-nodejs:latest
