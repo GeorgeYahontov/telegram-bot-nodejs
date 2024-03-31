@@ -1,5 +1,5 @@
-# Установите базовый образ Node.js
-FROM node:16
+# Установите базовый образ alpine
+FROM node:alpine
 
 # Установите PM2 глобально внутри образа
 RUN npm install pm2 -g

@@ -1,9 +1,15 @@
 version: '3.8'
 services:
   app:
-    container_name: nest-gpt
-    build: .
+    container_name: nodeapp
+    image: ghcr.io/georgeyahontov/telegram-bot-nodejs:latest
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      NODE_ENV: production
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: '1.0'

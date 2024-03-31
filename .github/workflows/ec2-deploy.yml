@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: CI/CD Pipeline
 
 on:
   workflow_dispatch:
@@ -7,32 +7,43 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CICD_TOKEN }}
+
+      - name: Build and push app container image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/telegram-bot-nodejs:latest
+
+  deploy-to-ec2:
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-   #     script: |
-   #       cd telegram-bot-nodejs
-  #        git pull origin main
-  #        sudo docker exec nest-gpt npm install
-   #       sudo docker exec nest-gpt pm2 reload all
-   
-        script: |
-          sudo docker pause  nginx-proxy-m-app-1
-          sudo docker pause  portainer
-
-          cd telegram-bot-nodejs
-          git pull origin main
-          sudo docker-compose down
-          sudo docker-compose up --build -d
-
-          sudo docker unpause  nginx-proxy-m-app-1
-          sudo docker unpause  portainer
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USER }}
+            key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            echo "${{ secrets.CICD_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/${{ github.repository_owner }}/telegram-bot-nodejs:latest
+            docker stop nodeapp  true
+            docker rm nodeapp  true
+            docker run --name nodeapp -d -p 3000:3000 ghcr.io/GeorgeYahontov/telegram-bot-nodejs:latest
