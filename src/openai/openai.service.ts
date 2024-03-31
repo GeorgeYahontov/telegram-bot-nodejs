@@ -61,6 +61,7 @@ export class OpenaiService {
             this.dialogues[dialogId] = [];
             const knowLage = baseKnowledge;
             this.dialogues[dialogId].push({ role:DialogRole.User, content: knowLage });
+            console.log('knowLage work',this.dialogues[dialogId])
 
         }
         this.dialogues[dialogId].push({ role, content: message });

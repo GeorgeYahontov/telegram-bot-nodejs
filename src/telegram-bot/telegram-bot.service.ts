@@ -27,8 +27,8 @@ export class TelegramBotService {
                 const message = update.message.text;
                 let dialog = await this.openaiService.updateDialogue(dialogId,message,DialogRole.User);
                 const gptResponse = await this.openaiService.generateText(dialog);
-                await this.openaiService.updateDialogue(dialogId,`${gptResponse.promptTokens}\r\n\r\n${gptResponse.replyText}`,DialogRole.Assistant)
-                await this.sendTextMessage(dialogId, gptResponse.replyText);
+                await this.openaiService.updateDialogue(dialogId,gptResponse.replyText,DialogRole.Assistant)
+                await this.sendTextMessage(dialogId, `${gptResponse.promptTokens}\r\n\r\n${gptResponse.replyText}`);
             }
         }
     }
