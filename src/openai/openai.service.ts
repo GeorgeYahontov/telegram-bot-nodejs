@@ -6,6 +6,7 @@ import {baseKnowledge} from "./model";
 export enum DialogRole {
     User = 'user',
     Assistant = 'assistant',
+    system = 'system'
 }
 @Injectable()
 export class OpenaiService {
@@ -75,7 +76,7 @@ export class OpenaiService {
                 'форматуй свої відповіді с стилі телеграм повідомлення з використанням ємодзі, навідь якщо користувач сам не задавав емодзі'+
                 'Ось приклад, як можна відповідати: "Дякуємо за ваше запитання! 😊 Ваш баланс можна перевірити в мобільному додатку TAS2U або на сайті банку." \n' +
                 'Не забудьте використовувати емодзі для кращої виразності у форматі телеграм-повідомлень...\n'
-            this.dialogues[dialogId].push({ role:DialogRole.Assistant, content: `${prompt}+${knowLage}` });
+            this.dialogues[dialogId].push({ role:DialogRole.system, content: `${prompt}+${knowLage}` });
             console.log('knowLage work',this.dialogues[dialogId])
 
         }
